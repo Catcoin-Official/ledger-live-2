@@ -13,7 +13,7 @@ import {
 import { useNftMetadata } from "@ledgerhq/live-common/nft/index";
 import { View, StyleSheet, ViewStyle, StyleProp } from "react-native";
 import { Text } from "@ledgerhq/native-ui";
-import { NFTResource } from "@ledgerhq/live-common/nft/NftMetadataProvider/types";
+import { useTranslation } from "react-i18next";
 import Skeleton from "./Skeleton";
 
 type Props = {
@@ -29,13 +29,14 @@ const OperationRowNftName = ({
   account,
   parentAccount,
 }: Props) => {
+  const { t } = useTranslation();
   const mainAccount = getMainAccount(account, parentAccount);
   const currency = getAccountCurrency(mainAccount);
   const { status, metadata } = useNftMetadata(
     operation.contract,
     operation.tokenId,
     currency.id,
-  ) as NFTResource & { metadata: NFTMetadata };
+  );
 
   return (
     <View style={style}>
@@ -46,7 +47,7 @@ const OperationRowNftName = ({
           variant="body"
           fontWeight="semiBold"
         >
-          {metadata?.nftName || "-"}
+          {(metadata as Partial<NFTMetadata>)?.nftName || "-"}
         </Text>
       </Skeleton>
       <Text
@@ -56,7 +57,7 @@ const OperationRowNftName = ({
         ellipsizeMode="middle"
         numberOfLines={1}
       >
-        ID {operation.tokenId}
+        {t("common.patterns.id", { value: operation.tokenId })}
       </Text>
     </View>
   );

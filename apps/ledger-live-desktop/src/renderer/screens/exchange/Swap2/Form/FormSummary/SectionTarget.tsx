@@ -12,13 +12,12 @@ import SummarySection from "./SummarySection";
 import { openModal } from "~/renderer/actions/modals";
 import { context } from "~/renderer/drawers/Provider";
 import { useGetSwapTrackingProperties } from "../../utils/index";
-
 import {
   SwapSelectorStateType,
   SwapTransactionType,
 } from "@ledgerhq/live-common/exchange/swap/types";
 import TargetAccountDrawer from "../TargetAccountDrawer";
-import { AccountLike } from "~/../../../libs/ledgerjs/packages/types-live/lib";
+import { AccountLike } from "@ledgerhq/types-live";
 
 const AccountSection = ({
   account,

@@ -27,6 +27,7 @@ import {
   NotificationContentCard,
 } from "../dynamicContent/types";
 import { ProtectStateNumberEnum } from "../components/ServicesWidget/types";
+import { ImageType } from "../components/CustomImage/types";
 
 // === ACCOUNT STATE ===
 
@@ -72,6 +73,7 @@ export type AppState = {
   modalLock: boolean;
   backgroundEvents: Array<FwUpdateBackgroundEvent>;
   isMainNavigatorVisible: boolean;
+  wiredDevice: DeviceLike | null;
 };
 
 // === BLE STATE ===
@@ -164,8 +166,6 @@ export type Pair = {
   exchange?: string | null;
 };
 
-// export type SetExchangePairs = (_: Array<Pair>) => any;
-
 export type Theme = "system" | "light" | "dark";
 
 export type SettingsState = {
@@ -208,6 +208,8 @@ export type SettingsState = {
     };
   };
   lastSeenDevice: DeviceModelInfo | null | undefined;
+  knownDeviceModelIds: Record<DeviceModelId, boolean>;
+  hasSeenStaxEnabledNftsPopup: boolean;
   starredMarketCoins: string[];
   lastConnectedDevice: Device | null | undefined;
   marketRequestParams: MarketListRequestParams;
@@ -216,6 +218,7 @@ export type SettingsState = {
   sensitiveAnalytics: boolean;
   firstConnectionHasDevice: boolean | null;
   firstConnectHasDeviceUpdated: boolean | null;
+  customImageType: ImageType | null;
   customImageBackup?: { hex: string; hash: string };
   lastSeenCustomImage: {
     size: number;
@@ -223,10 +226,12 @@ export type SettingsState = {
   };
   notifications: NotificationsSettings;
   walletTabNavigatorLastVisitedTab: keyof WalletTabNavigatorStackParamList;
-  displayStatusCenter: boolean;
   overriddenFeatureFlags: { [key in FeatureId]?: Feature | undefined };
   featureFlagsBannerVisible: boolean;
   debugAppLevelDrawerOpened: boolean;
+  dateFormat: string;
+  hasBeenUpsoldProtect: boolean;
+  generalTermsVersionAccepted?: string;
 };
 
 export type NotificationsSettings = {

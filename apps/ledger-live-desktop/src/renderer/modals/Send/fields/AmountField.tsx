@@ -4,18 +4,17 @@ import { Trans, TFunction } from "react-i18next";
 import { getAccountBridge } from "@ledgerhq/live-common/bridge/index";
 import { Account, AccountBridge, AccountLike } from "@ledgerhq/types-live";
 import { Transaction, TransactionStatus } from "@ledgerhq/live-common/generated/types";
-
 import Box from "~/renderer/components/Box";
 import Label from "~/renderer/components/Label";
 import RequestAmount from "~/renderer/components/RequestAmount";
 import Switch from "~/renderer/components/Switch";
 import Text from "~/renderer/components/Text";
 
-type Props = {
+type Props<T> = {
   parentAccount?: Account;
   account: AccountLike;
   transaction: Transaction;
-  onChangeTransaction: (_: AccountBridge<any>) => void;
+  onChangeTransaction: (_: AccountBridge<T>) => void;
   status: TransactionStatus;
   bridgePending: boolean;
   t: TFunction;
@@ -25,7 +24,7 @@ type Props = {
   withUseMaxLabel?: boolean;
 };
 
-const AmountField = ({
+const AmountField = <T,>({
   account,
   parentAccount,
   transaction,
@@ -37,7 +36,7 @@ const AmountField = ({
   resetInitValue,
   walletConnectProxy,
   withUseMaxLabel,
-}: Props) => {
+}: Props<T>) => {
   const bridge = getAccountBridge(account, parentAccount);
 
   useEffect(() => {

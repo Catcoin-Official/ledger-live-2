@@ -63,8 +63,6 @@ There are two modes of usage of this library.
     *   [Parameters](#parameters-19)
 *   [getTokenById](#gettokenbyid)
     *   [Parameters](#parameters-20)
-*   [findCompoundToken](#findcompoundtoken)
-    *   [Parameters](#parameters-21)
 
 ### abandonSeedAddresses
 
@@ -256,16 +254,6 @@ Returns **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 Returns **TokenCurrency** 
 
-### findCompoundToken
-
-if a given token account is a token that can be used in compound, give the associated compound token (cToken)
-
-#### Parameters
-
-*   `token` **any** 
-
-Returns **(TokenCurrency | null | [undefined](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined))** 
-
 ## Maintainance notes
 
 Import crypto assets data guide:
@@ -277,7 +265,7 @@ Regenerate data:
     node script/crypto-assets-importer/index.js ~/dev/crypto-assets
     node script/crypto-assets-importer/tron/sync-trc10-tokens.js
 
-NB: currencies, trc20 and asa are currently manually maintained.
+NB: currencies asa, esdt, spl, stellar and trc20 are currently manually maintained.
 
 Update test and snapshots in the monorepo:
 

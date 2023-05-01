@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { setLastSeenCustomImage, clearLastSeenCustomImage } from "~/renderer/actions/settings";
 import { Device } from "@ledgerhq/live-common/hw/actions/types";
@@ -17,8 +17,8 @@ import {
   renderImageLoadRequested,
   renderLoadingImage,
 } from "../DeviceAction/rendering";
+import staxLoadImage from "@ledgerhq/live-common/hw/staxLoadImage";
 import { mockedEventEmitter } from "~/renderer/components/debug/DebugMock";
-import { command } from "~/renderer/commands";
 import { DeviceModelId } from "@ledgerhq/types-devices";
 
 type Props = {
@@ -32,8 +32,7 @@ type Props = {
   blockNavigation?: (blocked: boolean) => void;
 };
 
-const staxLoadImageExec = command("staxLoadImage");
-const action = createAction(getEnv("MOCK") ? mockedEventEmitter : staxLoadImageExec);
+const action = createAction(getEnv("MOCK") ? mockedEventEmitter : staxLoadImage);
 const mockedDevice = { deviceId: "", modelId: DeviceModelId.stax, wired: true };
 
 const CustomImageDeviceAction: React.FC<Props> = withRemountableWrapper(props => {
@@ -49,7 +48,7 @@ const CustomImageDeviceAction: React.FC<Props> = withRemountableWrapper(props =>
   } = props;
   const type: Theme["theme"] = useTheme("colors.palette.type");
   const device = getEnv("MOCK") ? mockedDevice : props.device;
-  const commandRequest = hexImage;
+  const commandRequest = useMemo(() => ({ hexImage }), [hexImage]);
 
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -111,7 +110,7 @@ const CustomImageDeviceAction: React.FC<Props> = withRemountableWrapper(props =>
             error,
             device: device ?? undefined,
             ...(isRefusedOnStaxError
-              ? { Icon: Icons.CircledAlertMedium, iconColor: "warning.c100" }
+              ? { Icon: Icons.CircledAlertMedium, iconColor: "warning.c50" }
               : {}),
           })}
           <Button size="large" variant="main" outline={false} onClick={handleRetry}>

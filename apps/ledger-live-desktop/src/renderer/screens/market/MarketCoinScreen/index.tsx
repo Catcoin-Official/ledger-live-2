@@ -23,7 +23,6 @@ import { openModal } from "~/renderer/actions/modals";
 import { getAllSupportedCryptoCurrencyTickers } from "@ledgerhq/live-common/platform/providers/RampCatalogProvider/helpers";
 import { useRampCatalog } from "@ledgerhq/live-common/platform/providers/RampCatalogProvider/index";
 import { flattenAccounts } from "@ledgerhq/live-common/account/index";
-
 import { useFeature } from "@ledgerhq/live-common/featureFlags/index";
 import useStakeFlow from "../../stake";
 import { stakeDefaultTrack } from "~/renderer/screens/stake/constants";
@@ -135,9 +134,7 @@ export default function MarketCoinScreen() {
   const stakeProgramsEnabled = stakeProgramsFeatureFlag?.enabled ?? false;
   const availableOnStake =
     stakeProgramsEnabled && currency && listFlag.includes(currency?.internalCurrency?.id);
-  const startStakeFlow = useStakeFlow({
-    currencies: currency ? [currency?.internalCurrency?.id] : [],
-  });
+  const startStakeFlow = useStakeFlow();
 
   const color = internalCurrency
     ? getCurrencyColor(internalCurrency, colors.background.main)
@@ -232,9 +229,11 @@ export default function MarketCoinScreen() {
       });
       setTrackingSource("Page Market Coin");
 
-      startStakeFlow();
+      startStakeFlow({
+        currencies: internalCurrency ? [internalCurrency.id] : undefined,
+      });
     },
-    [currency?.ticker, startStakeFlow],
+    [currency?.ticker, internalCurrency, startStakeFlow],
   );
 
   const toggleStar = useCallback(() => {

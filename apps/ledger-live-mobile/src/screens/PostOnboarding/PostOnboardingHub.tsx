@@ -3,6 +3,7 @@ import { Divider, Flex, Icons, Log, Text } from "@ledgerhq/native-ui";
 import { useTranslation } from "react-i18next";
 import { ScrollView, StyleSheet } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Animated, {
   cancelAnimation,
   interpolate,
@@ -28,8 +29,9 @@ import {
   StackNavigatorProps,
 } from "../../components/RootNavigator/types/helpers";
 import { PostOnboardingNavigatorParamList } from "../../components/RootNavigator/types/PostOnboardingNavigator";
-import DeviceSetupView from "../../components/DeviceSetupView";
 import { useCompleteActionCallback } from "../../logic/postOnboarding/useCompleteAction";
+import { track, TrackScreen } from "../../analytics";
+import Link from "../../components/wrappedUi/Link";
 
 const AnimatedFlex = Animated.createAnimatedComponent(Flex);
 
@@ -65,11 +67,10 @@ const PostOnboardingHub = ({ navigation, route }: NavigationProps) => {
      * Complete claim NFT action if the route param completed is true
      * */
     () => {
-      route &&
-        route.params &&
-        route.params.completed &&
-        route.params.completed === "true" &&
+      if (route?.params?.completed === "true") {
+        track("deeplink", { action: "Claim NFT return to setup" });
         completePostOnboardingAction(PostOnboardingActionId.claimNft);
+      }
     },
     [clearLastActionCompleted, completePostOnboardingAction, route],
   );
@@ -166,9 +167,25 @@ const PostOnboardingHub = ({ navigation, route }: NavigationProps) => {
     deviceModelId || DeviceModelId.nanoX,
   )?.productName;
 
+  const safeAreaInsets = useSafeAreaInsets();
+
   return (
-    <DeviceSetupView hasCloseButton>
-      <Flex px={6} py={7} justifyContent="space-between" flex={1}>
+    <>
+      <TrackScreen
+        key={allDone.toString()}
+        category={
+          allDone
+            ? "User has completed all post-onboarding actions"
+            : "Post-onboarding hub"
+        }
+      />
+      <Flex
+        px={6}
+        py={7}
+        justifyContent="space-between"
+        flex={1}
+        paddingBottom={safeAreaInsets.bottom}
+      >
         <Text variant="h1Inter" fontWeight="semiBold" mb={8}>
           {allDone
             ? t("postOnboarding.hub.allDoneTitle", {
@@ -184,17 +201,16 @@ const PostOnboardingHub = ({ navigation, route }: NavigationProps) => {
             </React.Fragment>
           ))}
         </ScrollView>
-        <Flex mt={8}>
+        <Flex mt={8} alignItems="center" justifyContent="center">
           {allDone ? null : (
-            <Text
-              variant="large"
-              fontWeight="semiBold"
-              alignSelf="center"
+            <Link
+              size="large"
               onPress={navigateToMainScreen}
-              color="neutral.c100"
+              event="button_clicked"
+              eventProperties={{ button: "I'll do this later" }}
             >
               {t("postOnboarding.hub.skip")}
-            </Text>
+            </Link>
           )}
         </Flex>
       </Flex>
@@ -210,7 +226,7 @@ const PostOnboardingHub = ({ navigation, route }: NavigationProps) => {
           />
           <AnimatedFlex style={doneContentStyle}>
             <Flex flexDirection="column" alignItems="center" p={8}>
-              <Icons.CircledCheckSolidMedium color="success.c100" size={54} />
+              <Icons.CircledCheckSolidMedium color="success.c50" size={54} />
               <Flex height={83} />
               <Log>{t("postOnboarding.hub.done")}</Log>
               <Flex height={100} />
@@ -218,7 +234,7 @@ const PostOnboardingHub = ({ navigation, route }: NavigationProps) => {
           </AnimatedFlex>
         </AnimatedFlex>
       )}
-    </DeviceSetupView>
+    </>
   );
 };
 

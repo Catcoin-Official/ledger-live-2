@@ -1,14 +1,12 @@
-import { makeRe } from "minimatch";
 import {
   Currency,
   CryptoCurrency,
   CryptoOrTokenCurrency,
   TokenCurrency,
 } from "@ledgerhq/types-cryptoassets";
-import { listTokens, listSupportedCurrencies } from "../currencies";
-import { PlatformSupportedCurrency } from "../platform/types";
-import { CurrencyFilters } from "../platform/filters";
-import { isPlatformSupportedCurrency } from "../platform/helpers";
+import { makeRe } from "minimatch";
+import { listTokens } from "@ledgerhq/cryptoassets";
+import { listSupportedCurrencies } from "@ledgerhq/coin-framework/currencies/index";
 
 export function isCryptoCurrency(
   currency: Currency
@@ -34,8 +32,12 @@ export function listCurrencies(
   return [...currencies, ...allTokens];
 }
 
+export type CurrencyFilters = {
+  currencies?: string[];
+};
+
 export function filterCurrencies(
-  currencies: PlatformSupportedCurrency[],
+  currencies: CryptoOrTokenCurrency[],
   filters: CurrencyFilters
 ): CryptoOrTokenCurrency[] {
   const filterCurrencyRegexes = filters.currencies
@@ -43,10 +45,6 @@ export function filterCurrencies(
     : null;
 
   return currencies.filter((currency) => {
-    if (!filters.includeTokens && isTokenCurrency(currency)) {
-      return false;
-    }
-
     if (
       filterCurrencyRegexes &&
       filterCurrencyRegexes.length &&
@@ -56,19 +54,5 @@ export function filterCurrencies(
     }
 
     return true;
-  });
-}
-
-export function listAndFilterCurrencies({
-  includeTokens = false,
-  currencies,
-}: CurrencyFilters): CryptoOrTokenCurrency[] {
-  const allCurrencies = listCurrencies(includeTokens).filter(
-    isPlatformSupportedCurrency
-  );
-
-  return filterCurrencies(allCurrencies, {
-    includeTokens,
-    currencies,
   });
 }

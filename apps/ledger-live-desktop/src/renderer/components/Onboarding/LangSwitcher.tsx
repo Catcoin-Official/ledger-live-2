@@ -5,7 +5,6 @@ import { languageSelector } from "~/renderer/reducers/settings";
 import { useDispatch, useSelector } from "react-redux";
 import { Dropdown } from "@ledgerhq/react-ui";
 import { languageLabels } from "~/renderer/screens/settings/sections/General/LanguageSelect";
-
 import { prodStableLanguages } from "~/config/languages";
 
 const options = prodStableLanguages.map(value => ({
@@ -16,14 +15,14 @@ const options = prodStableLanguages.map(value => ({
 
 const styles = {
   // TODO: implement this behavior in the @ledger/ui lib, here we are just overriding the style from the design system lib to have the MENU right aligned
-  menu: (styles: any) => ({
+  menu: (styles: unknown) => ({
     ...styles,
     backgroundColor: "transparent",
     width: "fit-content",
   }),
 
   // TODO: implement this behavior in the @ledger/ui lib, here we are just overriding the style from the design system lib to have the VALUE right aligned
-  valueContainer: (styles: any) => ({ ...styles }),
+  valueContainer: (styles: unknown) => ({ ...styles }),
   option: () => ({
     flex: 1,
     alignSelf: "center",

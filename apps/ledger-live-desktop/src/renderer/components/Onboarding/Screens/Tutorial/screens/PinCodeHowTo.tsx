@@ -1,11 +1,9 @@
 import React, { useContext } from "react";
 import { useTranslation, Trans } from "react-i18next";
 import { Title, AsideFooter, Column, Bullet, AnimationContainer } from "../shared";
-
 import NanoDeviceCheckIcon from "~/renderer/icons/NanoDeviceCheckIcon";
 import NanoDeviceCancelIcon from "~/renderer/icons/NanoDeviceCancelIcon";
 import { useTheme } from "styled-components";
-
 import Animation from "~/renderer/animations";
 import { getDeviceAnimation } from "~/renderer/components/DeviceAction/animations";
 import { OnboardingContext } from "../../../index";
@@ -53,7 +51,7 @@ const PinCodeHowToAnimation = () => {
 
 PinCodeHowTo.Illustration = <PinCodeHowToAnimation />;
 
-const Footer = (props: any) => {
+const Footer = (props: unknown) => {
   const { t } = useTranslation();
   return (
     <AsideFooter
